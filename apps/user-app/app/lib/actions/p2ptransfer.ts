@@ -2,7 +2,7 @@
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
-import db from "@repo/db/client";
+import prisma from "@repo/db/client";
 
 export async function p2pTransfer(to: string, amount: number) {
   const session = await getServerSession(authOptions);
@@ -11,7 +11,7 @@ export async function p2pTransfer(to: string, amount: number) {
     return { message: "You are not logged in" };
   }
 
-  const toUser = await db.user.findFirst({
+  const toUser = await prisma.user.findFirst({
     where: {
       number: to,
     },
@@ -20,10 +20,10 @@ export async function p2pTransfer(to: string, amount: number) {
     return { message: `No such number exists` };
   }
 
-  await db.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     // locking the particular rows
     await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId"=${Number(from)} FOR UPDATE`;
-    
+
     const fromBalance = await tx.balance.findUnique({
       where: { userId: Number(from) },
     });
@@ -52,5 +52,15 @@ export async function p2pTransfer(to: string, amount: number) {
         },
       },
     });
+
+    const it=tx.p2pTransfer.create({
+      data: {
+        fromUserId: Number(from),
+        toUserId: toUser.id,
+        amount,
+        timeStamp: new Date(),
+      },
+    });
+    console.log(it);
   });
 }
