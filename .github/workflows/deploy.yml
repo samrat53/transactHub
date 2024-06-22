@@ -28,3 +28,16 @@ jobs:
 
     - name: Verify Pushed Image
       run: docker pull samratbuffer/transacthub:latest  # Replace with your Docker Hub username and repository
+      # deploying in EC2 server
+
+    # - name: Deploy to EC2
+    #   uses: appleboy/ssh-action@master
+    #   with:
+    #     host: ${{ secrets.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USERNAME }}
+    #     key: ${{ secrets.SSH_KEY }}
+    #     script: |
+    #       sudo docker pull samratbuffer/transacthub:latest
+    #       sudo docker stop transacthub || true
+    #       sudo docker rm transacthub || true
+    #       sudo docker run -d -e DATABASE_URL ${{secrets.DB_URL}} --restarts-always --name transacthub -p 3005:3000 samratbuffer/transacthub:latest
