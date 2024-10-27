@@ -5,4 +5,3 @@ export default function(){
     <div className="w-full"><SendCard/></div>
   )
 }
-
