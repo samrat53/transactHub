@@ -6,8 +6,10 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "db:generate":"cd packages/db && npx prisma generate && cd ../..",
-    "start-user-app":" cd ./apps/user-app && npm run start"
+    "db:generate":"cd ./packages/db && npx prisma generate && cd ../..",
+    "start-user-app":" cd ./apps/user-app && npm run start && cd ../../",
+    "start-bank-webhook": "cd ./apps/bank-webhook && tsc -b && node ./dist/index.js",
+    "start-merchant-app":"cd ./apps/merchant-app && npm run start && cd ../../"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
